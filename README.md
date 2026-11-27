@@ -14,6 +14,6 @@ The chance to have a pitch bend with the joystick allows me to play more complex
 
 <img width="1141" height="631" alt="image" src="https://github.com/user-attachments/assets/ea2b74d2-d311-42a2-b096-bf8e377f8bee" />
 
-This is the schematic:
+This is the schematic of the midi keyboard:
 
 <img width="1187" height="622" alt="image" src="https://github.com/user-attachments/assets/d94d6740-bb31-42a4-bd0c-4eb936e785ab" />
