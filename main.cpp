@@ -8,7 +8,7 @@
 Adafruit_USBD_MIDI usb_midi;
 
 // =====================================================
-// KEYS
+// TOUCH KEYS
 // =====================================================
 
 const uint8_t keyPins[8] =
@@ -41,34 +41,38 @@ const uint8_t noteMap[8] =
 // BUTTONS
 // =====================================================
 
-const int octaveDownPin = 13;   // SWITCH1
-const int octaveUpPin   = 12;   // SWITCH2
+const int octaveDownPin = TX;   // SWITCH1
+const int octaveUpPin   = RX;   // SWITCH2
 const int programPin    = 11;   // SWITCH3
 
-bool oldUp = false;
-bool oldDown = false;
+bool oldUp      = false;
+bool oldDown    = false;
 bool oldProgram = false;
 
 // =====================================================
 // ROTARY ENCODER
 // =====================================================
 
-const int encoderA = 10;
-const int encoderB = 9;
+const int encoderA = 10;   // ROT1A
+const int encoderB = 9;    // ROT1B
 
 Encoder encoder(encoderA, encoderB);
 
 long lastEncoderValue = 0;
-
 uint8_t volumeValue = 100;
 
 // =====================================================
-// PITCH BENDER
+// JOYSTICK
 // =====================================================
 
-const int pitchPin = RX;  // PitchBenderY
+// Vertical axis -> Pitch Bend
+const int pitchPin = 13;
+
+// Horizontal axis -> Modulation Wheel
+const int modPin = 12;
 
 int lastPitch = 8192;
+int lastModulation = -1;
 
 // =====================================================
 // MIDI STATE
@@ -78,7 +82,7 @@ int octaveOffset = 0;
 uint8_t currentProgram = 0;
 
 // =====================================================
-// MIDI FUNCTIONS
+// MIDI HELPERS
 // =====================================================
 
 void sendNoteOn(uint8_t note)
@@ -154,7 +158,7 @@ void setup()
 {
   TinyUSBDevice.begin();
 
-  for(int i=0;i<8;i++)
+  for(int i = 0; i < 8; i++)
   {
     pinMode(keyPins[i], INPUT_PULLUP);
   }
@@ -172,10 +176,9 @@ void setup()
 
 void updateKeys()
 {
-  for(int i=0;i<8;i++)
+  for(int i = 0; i < 8; i++)
   {
-    bool pressed =
-      !digitalRead(keyPins[i]);
+    bool pressed = !digitalRead(keyPins[i]);
 
     if(pressed && !keyState[i])
     {
@@ -236,76 +239,6 @@ void updateButtons()
     sendProgramChange(currentProgram);
   }
 
-  oldUp = up;
-  oldDown = down;
-  oldProgram = prog;
-}
-
-// =====================================================
-// ENCODER
-// =====================================================
-
-void updateEncoder()
-{
-  long value =
-    encoder.read() / 4;
-
-  if(value != lastEncoderValue)
-  {
-    if(value > lastEncoderValue)
-      volumeValue++;
-
-    if(value < lastEncoderValue)
-      volumeValue--;
-
-    volumeValue =
-      constrain(volumeValue,
-                0,
-                127);
-
-    sendControlChange(
-      7,
-      volumeValue
-    );
-
-    lastEncoderValue = value;
-  }
-}
-
-// =====================================================
-// PITCH BEND
-// =====================================================
-
-void updatePitchBend()
-{
-  int raw =
-    analogRead(pitchPin);
-
-  int bend =
-    map(raw,
-        0,
-        4095,
-        0,
-        16383);
-
-  if(abs(bend - lastPitch) > 20)
-  {
-    sendPitchBend(bend);
-
-    lastPitch = bend;
-  }
-}
-
-// =====================================================
-// LOOP
-// =====================================================
-
-void loop()
-{
-  updateKeys();
-
-  updateButtons();
-
-  updateEncoder();
-
-  updatePitchBend();
+  oldUp      = up;
+  oldDown    = down;
+  oldProgram
