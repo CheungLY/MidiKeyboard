@@ -1,0 +1,6 @@
+﻿Designator,Footprint,Quantity,Value,LCSC Part #
+J1,CapKeysMidi,1,Conn_01x08,
+"SW1, SW2, SW3",Kailh Choc Low-Profile Switches,3,SW_Push,
+SW4,RotaryEncoder_Alps_EC11E-Switch_Vertical_H20mm,1,RotaryEncoder_Switch_MP,
+U1,Waveshare ESP32-S3-Zero,1,Waveshare ESP32-S3-ZERO,
+U3,RES-ADJ-TH_YA13S-L7.4-B10KA-60-0-DL01,1,YA13S-L7.4-B10KA,C37323748
